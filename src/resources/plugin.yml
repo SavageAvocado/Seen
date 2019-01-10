@@ -1,0 +1,18 @@
+name: Seen
+description: None.
+
+author: SavageAvocado.
+website: savagedev.net
+
+main: net.savagedev.seen.Seen
+depend: [Essentials, Vault]
+version: 1.0
+
+commands:
+  seen:
+    description: No.
+  playtime:
+    description: No.
+  seenreload:
+    description: No.
+    aliases: [seenrl]

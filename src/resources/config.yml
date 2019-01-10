@@ -1,0 +1,48 @@
+preferred-accuracy: 2
+
+messages:
+  invalid-arguments: '&cInvalid arguments! Try /seen <player>'
+  player-not-found: '&cPlayer not found.'
+  seen:
+  - '&8&m-----------------------------------------------------'
+  - '&9Player %player% is %status%&9 since %seen%'
+  - ''
+  - '&3First Join:&7 %first-join%'
+  - '&3Playtime:&7 %playtime%'
+  - '&3Banned:&7 %banned%'
+  - '&3Muted:&7 %muted%'
+  - ''
+  - '&3Name History:&7 %name-history%'
+  - ''
+  - '&3Location:&7 %location%'
+  - '&8&m-----------------------------------------------------'
+  admin-seen:
+  - '&8&m-----------------------------------------------------'
+  - '&9Player %player% is %status%&9 since %seen%'
+  - ''
+  - '&3Rank:&7 %group%'
+  - '&3First Join:&7 %first-join%'
+  - '&3Playtime:&7 %playtime%'
+  - '&3Location:&7 %location%'
+  - '&3Banned:&7 %banned%'
+  - '&3Muted:&7 %muted%'
+  - ''
+  - '&3Name History:&7 %name-history%'
+  - ''
+  - '&3IP: &7%ip%'
+  - '&8&m-----------------------------------------------------'
+  playtime:
+  - '&9%player%''s stats'
+  - '&3Play Time:&7 %playtime%'
+  - '&3Times Joined:&7 %times-joined%'
+
+admin-permission: 'seen.admin'
+
+status:
+  offline: '&cOffline'
+  online: '&aOnline'
+
+formats:
+  location: '(%world%, %x%, %y%, %z%)'
+  first-join: 'MM/dd/yy h:mm a'
+  name-hist-separator: ' > '
