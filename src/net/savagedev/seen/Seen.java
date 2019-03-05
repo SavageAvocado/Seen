@@ -1,8 +1,6 @@
 package net.savagedev.seen;
 
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import net.savagedev.seen.commands.SeenReloadCmd;
 import net.milkbowl.vault.permission.Permission;
@@ -20,8 +18,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.entity.Player;
 import org.bukkit.Statistic;
 
-import java.io.IOException;
-import java.io.File;
 import java.util.*;
 
 public class Seen extends JavaPlugin {
@@ -69,8 +65,6 @@ public class Seen extends JavaPlugin {
         this.fileUtils = new FileUtils(this.getDataFolder());
         this.mojangUtils = new MojangUtils(this);
         this.stringUtils = new StringUtils();
-
-        this.migrateNameHistories();
 
         if (this.getServer().getOnlinePlayers().size() <= 0)
             return;
@@ -147,36 +141,6 @@ public class Seen extends JavaPlugin {
         this.joinTime.remove(uuid);
     }
 
-    private void migrateNameHistories() {
-        File nameHistFile = new File(this.getDataFolder(), "name_history.yml");
-        if (!nameHistFile.exists()) return;
-
-        this.getServer().getLogger().info(String.format("[%s] Starting name history migration...", this.getDescription().getName()));
-
-        this.getServer().getScheduler().runTaskAsynchronously(this, () -> {
-            FileConfiguration configuration = new YamlConfiguration();
-
-            try {
-                configuration.load(nameHistFile);
-            } catch (IOException | InvalidConfigurationException e) {
-                e.printStackTrace();
-            }
-
-            for (String uuid : configuration.getConfigurationSection("").getKeys(false)) {
-                this.fileUtils.createFile(uuid);
-
-                List<String> names = new ArrayList<>(configuration.getStringList(uuid));
-                FileConfiguration configuration1 = this.fileUtils.getFileConfiguration(uuid);
-                configuration1.set("name-history", names);
-                configuration1.set("join-time", System.currentTimeMillis());
-                this.fileUtils.saveFileConfiguration(configuration1, uuid);
-            }
-
-            new File(this.getDataFolder(), "name_history.yml").delete();
-            this.getServer().getLogger().info(String.format("[%s] Name history migration complete.", this.getDescription().getName()));
-        });
-    }
-
     public long getJoinTime(UUID uuid) {
         return this.joinTime.get(uuid);
     }
@@ -204,5 +168,4 @@ public class Seen extends JavaPlugin {
     public DateUtils getDateUtils() {
         return this.dateUtils;
     }
-
 }
