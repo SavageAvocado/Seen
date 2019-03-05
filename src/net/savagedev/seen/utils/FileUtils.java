@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class FileUtils {
-    private File dataFolder;
+    private final File dataFolder;
 
     public FileUtils(File dataFolder) {
         this.dataFolder = new File(dataFolder, "storage");
@@ -16,7 +16,7 @@ public class FileUtils {
 
     public void createFile(String name) {
         File file;
-        if ((file = new File(this.dataFolder, this.correctFormat(name))).exists())
+        if ((file = new File(this.dataFolder, this.formatFileName(name))).exists())
             return;
 
         file.getParentFile().mkdirs();
@@ -48,10 +48,10 @@ public class FileUtils {
     }
 
     private File getFile(String name) {
-        return new File(this.dataFolder, this.correctFormat(name));
+        return new File(this.dataFolder, this.formatFileName(name));
     }
 
-    private String correctFormat(String name) {
+    private String formatFileName(String name) {
         return name.endsWith(".yml") ? name : name + ".yml";
     }
 }

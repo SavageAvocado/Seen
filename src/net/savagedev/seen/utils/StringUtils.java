@@ -30,10 +30,11 @@ public class StringUtils {
     }
 
     public void message(CommandSender user, String message) {
+        if (message == null) return;
         user.sendMessage(this.color(message));
     }
 
-    private String color(String message) {
+    public String color(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 }

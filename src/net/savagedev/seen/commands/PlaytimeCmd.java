@@ -1,62 +1,52 @@
 package net.savagedev.seen.commands;
 
-import com.earth2me.essentials.User;
 import net.savagedev.seen.Seen;
+import net.savagedev.seen.commands.async.AsyncCommand;
+import net.savagedev.seen.utils.DateUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-public class PlaytimeCmd implements CommandExecutor {
-    private Seen plugin;
-
+public class PlaytimeCmd extends AsyncCommand {
     public PlaytimeCmd(Seen plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     @Override
-    public boolean onCommand(CommandSender user, Command cmd, String d, String[] args) {
+    public void execute(CommandSender user, String... args) {
         if (args.length == 0) {
             if (!(user instanceof Player)) {
-                this.plugin.getStringUtils().message(user, "&cInvalid arguments! Try /playtime <player>");
-                return true;
+                this.getPlugin().getStringUtils().message(user, "&cInvalid arguments! Try: playtime <player>");
+                return;
             }
 
-            for (String message : this.plugin.getConfig().getStringList("messages.playtime"))
-                this.plugin.getStringUtils().message(user, this.format((OfflinePlayer) user, message, String.valueOf(((Player) user).getStatistic(Statistic.LEAVE_GAME) + 1), this.plugin.getDateUtils().formatPlayTimePT(((Player) user).getStatistic(Statistic.PLAY_ONE_TICK))));
-            return true;
+            for (String message : this.getPlugin().getConfig().getStringList("messages.playtime"))
+                this.getPlugin().getStringUtils().message(user, this.format((OfflinePlayer) user, message, String.valueOf(((Player) user).getStatistic(Statistic.LEAVE_GAME) + 1), this.getPlugin().getDateUtils().formatPlayTime(((Player) user).getStatistic(Statistic.PLAY_ONE_TICK), DateUtils.TimeLengthFormat.SHORT)));
+            return;
         }
 
-        if (this.plugin.getServer().getPlayer(args[0]) != null) {
-            this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
-                Player target = this.plugin.getServer().getPlayer(args[0]);
+        if (this.getPlugin().getServer().getPlayer(args[0]) != null) {
+            Player target = this.getPlugin().getServer().getPlayer(args[0]);
 
-                for (String message : this.plugin.getConfig().getStringList("messages.playtime"))
-                    this.plugin.getStringUtils().message(user, this.format(target, message, String.valueOf(target.getStatistic(Statistic.LEAVE_GAME) + 1), this.plugin.getDateUtils().formatPlayTimePT(target.getStatistic(Statistic.PLAY_ONE_TICK))));
-            });
-            return true;
+            for (String message : this.getPlugin().getConfig().getStringList("messages.playtime"))
+                this.getPlugin().getStringUtils().message(user, this.format(target, message, String.valueOf(target.getStatistic(Statistic.LEAVE_GAME) + 1), this.getPlugin().getDateUtils().formatPlayTime(target.getStatistic(Statistic.PLAY_ONE_TICK), DateUtils.TimeLengthFormat.SHORT)));
+            return;
         }
 
         OfflinePlayer target;
-        if ((target = this.plugin.getServer().getOfflinePlayer(args[0])) == null || (!target.isOnline() && !target.hasPlayedBefore())) {
-            this.plugin.getStringUtils().message(user, this.plugin.getConfig().getString("messages.player-not-found"));
-            return true;
+        if ((target = this.getPlugin().getServer().getOfflinePlayer(args[0])) == null || (!target.isOnline() && !target.hasPlayedBefore())) {
+            this.getPlugin().getStringUtils().message(user, this.getPlugin().getConfig().getString("messages.player-not-found"));
+            return;
         }
 
-        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
-            FileConfiguration config = this.plugin.getFileUtils().getFileConfiguration(target.getUniqueId().toString());
-            String playTime = config.getConfigurationSection("").contains("playtime") ? this.plugin.getDateUtils().formatPlayTimePT(config.getLong("playtime")) : "Unknown";
-            String timesJoined = config.getConfigurationSection("").contains("times-joined") ? String.valueOf(config.getInt("times-joined")) : "Unknown";
+        FileConfiguration config = this.getPlugin().getFileUtils().getFileConfiguration(target.getUniqueId().toString());
+        String playTime = config.getConfigurationSection("").contains("playtime") ? this.getPlugin().getDateUtils().formatPlayTime(config.getLong("playtime"), DateUtils.TimeLengthFormat.SHORT) : "Unknown";
+        String timesJoined = config.getConfigurationSection("").contains("times-joined") ? String.valueOf(config.getInt("times-joined")) : "Unknown";
 
-            for (String message : this.plugin.getConfig().getStringList("messages.playtime"))
-                this.plugin.getStringUtils().message(user, this.format(target, message, timesJoined, playTime));
-        });
-        return true;
+        for (String message : this.getPlugin().getConfig().getStringList("messages.playtime"))
+            this.getPlugin().getStringUtils().message(user, this.format(target, message, timesJoined, playTime));
     }
 
     private String format(OfflinePlayer target, String message, String timesJoined, String playTime) {

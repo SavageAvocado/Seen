@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.UUID;
 
 public class QuitE implements Listener {
-    private Seen plugin;
+    private final Seen plugin;
 
     public QuitE(Seen plugin) {
         this.plugin = plugin;

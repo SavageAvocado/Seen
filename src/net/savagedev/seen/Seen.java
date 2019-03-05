@@ -1,28 +1,27 @@
 package net.savagedev.seen;
 
-import com.earth2me.essentials.Essentials;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import net.savagedev.seen.commands.SeenReloadCmd;
 import net.milkbowl.vault.permission.Permission;
 import net.savagedev.seen.commands.PlaytimeCmd;
+import net.savagedev.seen.utils.MojangUtils;
+import net.savagedev.seen.utils.StringUtils;
 import net.savagedev.seen.commands.SeenCmd;
-import net.savagedev.seen.commands.SeenReloadCmd;
+import com.earth2me.essentials.Essentials;
 import net.savagedev.seen.listeners.JoinE;
 import net.savagedev.seen.listeners.QuitE;
 import net.savagedev.seen.utils.DateUtils;
 import net.savagedev.seen.utils.FileUtils;
-import net.savagedev.seen.utils.MojangUtils;
-import net.savagedev.seen.utils.StringUtils;
-import org.bukkit.Statistic;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.entity.Player;
+import org.bukkit.Statistic;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.File;
 import java.util.*;
 
 public class Seen extends JavaPlugin {
@@ -98,7 +97,6 @@ public class Seen extends JavaPlugin {
 
     private void loadListeners() {
         PluginManager pluginManager = this.getServer().getPluginManager();
-
         pluginManager.registerEvents(new JoinE(this), this);
         pluginManager.registerEvents(new QuitE(this), this);
     }
@@ -134,17 +132,8 @@ public class Seen extends JavaPlugin {
 
     private void loadCommands() {
         this.getCommand("seenreload").setExecutor(new SeenReloadCmd(this));
-
-
-        PluginCommand playtime = this.getCommand("playtime");
-        playtime.setExecutor(new PlaytimeCmd(this));
-
-        PluginCommand command = this.getCommand("seen");
-        SeenCmd seenCmd = new SeenCmd(this);
-
-        command.setExecutor(seenCmd);
-        command.setTabCompleter(seenCmd);
-        playtime.setTabCompleter(seenCmd);
+        this.getCommand("playtime").setExecutor(new PlaytimeCmd(this));
+        this.getCommand("seen").setExecutor(new SeenCmd(this));
     }
 
     public void setJoinTime(UUID uuid, long time) {
@@ -159,9 +148,8 @@ public class Seen extends JavaPlugin {
     }
 
     private void migrateNameHistories() {
-        File nameHistFile;
-        if (!(nameHistFile = new File(this.getDataFolder(), "name_history.yml")).exists())
-            return;
+        File nameHistFile = new File(this.getDataFolder(), "name_history.yml");
+        if (!nameHistFile.exists()) return;
 
         this.getServer().getLogger().info(String.format("[%s] Starting name history migration...", this.getDescription().getName()));
 
@@ -185,9 +173,8 @@ public class Seen extends JavaPlugin {
             }
 
             new File(this.getDataFolder(), "name_history.yml").delete();
+            this.getServer().getLogger().info(String.format("[%s] Name history migration complete.", this.getDescription().getName()));
         });
-
-        this.getServer().getLogger().info(String.format("[%s] Name history migration complete.", this.getDescription().getName()));
     }
 
     public long getJoinTime(UUID uuid) {

@@ -6,7 +6,7 @@ website: savagedev.net
 
 main: net.savagedev.seen.Seen
 depend: [Essentials, Vault]
-version: 1.0
+version: 1.5
 
 commands:
   seen:

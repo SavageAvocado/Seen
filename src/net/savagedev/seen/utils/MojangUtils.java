@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class MojangUtils {
-    private Seen plugin;
+    private final Seen plugin;
 
     public MojangUtils(Seen plugin) {
         this.plugin = plugin;
@@ -37,7 +37,7 @@ public class MojangUtils {
             this.plugin.getFileUtils().saveFileConfiguration(config, uuid.toString());
         }
 
-        if (!config.getStringList("name-history").get(config.getStringList("name-history").size() - 1).equals(username)) {
+        if (!config.getStringList("name-history").get(config.getStringList("name-history").size() <= 0 ? 0 : config.getStringList("name-history").size() - 1).equals(username)) {
             config.set("name-history", this.getNameHistoryFromAPI(uuid));
             this.plugin.getFileUtils().saveFileConfiguration(config, uuid.toString());
         }
@@ -47,11 +47,14 @@ public class MojangUtils {
 
     private List<String> getNameHistoryFromAPI(UUID uuid) {
         String url = String.format("https://api.mojang.com/user/profiles/%s/names", uuid.toString().replace("-", ""));
+        HttpsURLConnection connection = null;
         try {
-            HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+            connection = (HttpsURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
 
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+            BufferedReader bufferedReader = new BufferedReader(reader);
 
             List<String> names = new ArrayList<>();
             JsonArray array = (JsonArray) new JsonParser().parse(bufferedReader);
@@ -61,9 +64,13 @@ public class MojangUtils {
                 names.add(object.get("name").getAsString());
             }
 
+            connection.disconnect();
             return names;
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            assert connection != null;
+            connection.disconnect();
         }
 
         return null;

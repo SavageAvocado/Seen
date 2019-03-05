@@ -10,17 +10,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://E:/Servers/SavageCraft/Lobby/spigot.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://E:/Servers/SavageCraft/Lobby/spigot.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://E:/Servers/Test Network/Lobbies/Lobby-0/plugins/Essentials-2.x-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -49,6 +38,35 @@
       <library>
         <CLASSES>
           <root url="jar://$USER_HOME$/Downloads/NFB.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://E:/Servers/SavageCraft/Lobby/spigot.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://E:/Servers/SavageCraft/Lobby/spigot.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Downloads/RaidRepair.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Downloads/TextParticle.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

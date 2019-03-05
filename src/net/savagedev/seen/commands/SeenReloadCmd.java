@@ -1,26 +1,22 @@
 package net.savagedev.seen.commands;
 
 import net.savagedev.seen.Seen;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import net.savagedev.seen.commands.async.AsyncCommand;
 import org.bukkit.command.CommandSender;
 
-public class SeenReloadCmd implements CommandExecutor {
-    private Seen plugin;
-
+public class SeenReloadCmd extends AsyncCommand {
     public SeenReloadCmd(Seen plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     @Override
-    public boolean onCommand(CommandSender user, Command cmd, String d, String[] args) {
-        if (!user.hasPermission(this.plugin.getConfig().getString("admin-permission"))) {
-            this.plugin.getStringUtils().message(user, "&cYou do not have permission to execute this command.");
-            return true;
+    public void execute(CommandSender user, String... args) {
+        if (!user.hasPermission(this.getPlugin().getConfig().getString("admin-permission"))) {
+            this.getPlugin().getStringUtils().message(user, "&cYou do not have permission to execute this command.");
+            return;
         }
 
-        this.plugin.reload();
-        this.plugin.getStringUtils().message(user, "&9Plugin reloaded.");
-        return true;
+        this.getPlugin().reload();
+        this.getPlugin().getStringUtils().message(user, "&9Plugin reloaded.");
     }
 }

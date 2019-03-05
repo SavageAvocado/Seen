@@ -1,150 +1,133 @@
 package net.savagedev.seen.commands;
 
 import com.earth2me.essentials.User;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.savagedev.seen.Seen;
+import net.savagedev.seen.commands.async.AsyncCommand;
+import net.savagedev.seen.utils.DateUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
-public class SeenCmd implements CommandExecutor, TabCompleter {
-    private Seen plugin;
-
+public class SeenCmd extends AsyncCommand {
     public SeenCmd(Seen plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     @Override
-    public boolean onCommand(CommandSender user, Command cmd, String d, String[] args) {
+    public void execute(CommandSender user, String... args) {
         if (args.length == 0) {
-            this.plugin.getStringUtils().message(user, this.plugin.getConfig().getString("messages.invalid-arguments"));
-            return true;
+            this.getPlugin().getStringUtils().message(user, this.getPlugin().getConfig().getString("messages.invalid-arguments"));
+            return;
         }
 
-        if (this.plugin.getServer().getPlayer(args[0]) != null) {
-            this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
-                Player target = this.plugin.getServer().getPlayer(args[0]);
-                String nameHist = this.plugin.getMojangUtils().getNameHistory(this.plugin.getServer().getPlayer(args[0]));
-                String ip = target.getAddress().getHostString();
-
-                List<String> messages = user.hasPermission(this.plugin.getConfig().getString("admin-permission")) ? this.plugin.getConfig().getStringList("messages.admin-seen") : this.plugin.getConfig().getStringList("messages.seen");
-                for (String seenMessage : messages)
-                    this.plugin.getStringUtils().message(user, this.format(seenMessage, target, nameHist, this.plugin.getJoinTime(target.getUniqueId()), ip, this.plugin.getDateUtils().formatPlayTime(target.getStatistic(Statistic.PLAY_ONE_TICK)), this.plugin.getPermission().getPrimaryGroup(target)));
-            });
-            return true;
-        }
-
-        OfflinePlayer target;
-        if ((target = this.plugin.getServer().getOfflinePlayer(args[0])) == null || (!target.isOnline() && !target.hasPlayedBefore())) {
-            this.plugin.getStringUtils().message(user, this.plugin.getConfig().getString("messages.player-not-found"));
-            return true;
-        }
-
-        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
-            String nameHist = this.plugin.getMojangUtils().getNameHistory(target);
-
-            User essUser = this.plugin.getEssentials().getOfflineUser(target.getName());
-            String ip = essUser == null ? "Unknown" : essUser.getLastLoginAddress();
-
-            FileConfiguration config = this.plugin.getFileUtils().getFileConfiguration(target.getUniqueId().toString());
-            String playTime = config.getConfigurationSection("").contains("playtime") ? this.plugin.getDateUtils().formatPlayTime(config.getLong("playtime")) : "Unknown";
-
-            List<String> messages = user.hasPermission(this.plugin.getConfig().getString("admin-permission")) ? this.plugin.getConfig().getStringList("messages.admin-seen") : this.plugin.getConfig().getStringList("messages.seen");
+        Player onlineTarget;
+        if ((onlineTarget = this.getPlugin().getServer().getPlayer(args[0])) != null) {
+            String nameHist = this.getPlugin().getMojangUtils().getNameHistory(onlineTarget);
+            List<String> messages = user.hasPermission(this.getPlugin().getConfig().getString("admin-permission")) ? this.getPlugin().getConfig().getStringList("messages.admin-seen") : this.getPlugin().getConfig().getStringList("messages.seen");
             for (String seenMessage : messages)
-                this.plugin.getStringUtils().message(user, this.format(seenMessage, target, nameHist, target.getLastPlayed(), ip, playTime, this.plugin.getPermission().getPrimaryGroup((user instanceof Player) ? ((Player) user).getLocation().getWorld().getName() : this.plugin.getServer().getWorlds().get(0).getName(), target)));
-        });
-        return true;
+                this.getPlugin().getStringUtils().message(user, this.format(user, seenMessage, onlineTarget, nameHist, this.getPlugin().getJoinTime(onlineTarget.getUniqueId()), this.getPlugin().getDateUtils().formatPlayTime(onlineTarget.getStatistic(Statistic.PLAY_ONE_TICK), DateUtils.TimeLengthFormat.LONG), this.getPlugin().getPermission().getPrimaryGroup(onlineTarget)));
+            return;
+        }
+
+        OfflinePlayer offlineTarget;
+        if ((offlineTarget = this.getPlugin().getServer().getOfflinePlayer(args[0])) == null || (!offlineTarget.isOnline() && !offlineTarget.hasPlayedBefore())) {
+            this.getPlugin().getStringUtils().message(user, this.getPlugin().getConfig().getString("messages.player-not-found"));
+            return;
+        }
+
+        String nameHist = this.getPlugin().getMojangUtils().getNameHistory(offlineTarget);
+        FileConfiguration config = this.getPlugin().getFileUtils().getFileConfiguration(offlineTarget.getUniqueId().toString());
+        String playTime = config.getConfigurationSection("").contains("playtime") ? this.getPlugin().getDateUtils().formatPlayTime(config.getLong("playtime"), DateUtils.TimeLengthFormat.LONG) : "Unknown";
+
+        List<String> messages = user.hasPermission(this.getPlugin().getConfig().getString("admin-permission")) ? this.getPlugin().getConfig().getStringList("messages.admin-seen") : this.getPlugin().getConfig().getStringList("messages.seen");
+        for (String seenMessage : messages)
+            this.getPlugin().getStringUtils().message(user, this.format(user, seenMessage, offlineTarget, nameHist, offlineTarget.getLastPlayed(), playTime, this.getPlugin().getPermission().getPrimaryGroup((user instanceof Player) ? ((Player) user).getLocation().getWorld().getName() : this.getPlugin().getServer().getWorlds().get(0).getName(), offlineTarget)));
     }
 
-    private String format(String message, OfflinePlayer target, String nameHist, long lastPlayed, String ip, String playTime, String group) {
+    private String format(CommandSender sender, String message, OfflinePlayer target, String nameHist, long lastPlayed, String playTime, String group) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date(lastPlayed));
-        String seen = this.plugin.getDateUtils().formatDateDiff(new GregorianCalendar(), calendar);
+        String seen = this.getPlugin().getDateUtils().formatDateDiff(new GregorianCalendar(), calendar);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(this.plugin.getConfig().getString("formats.first-join"));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(this.getPlugin().getConfig().getString("formats.first-join"));
         String firstJoined = simpleDateFormat.format(new Date(target.getFirstPlayed()));
 
-        User essUser = this.plugin.getEssentials().getOfflineUser(target.getName());
+        User essUser = this.getPlugin().getEssentials().getOfflineUser(target.getName());
 
-        message = message.replace("%muted%", String.valueOf(essUser == null ? "Unknown" : essUser.getMuted()));
-        message = message.replace("%status%", target.isOnline() ? this.plugin.getConfig().getString("status.online") : this.plugin.getConfig().getString("status.offline"));
-        message = message.replace("%banned%", String.valueOf(this.plugin.getServer().getBannedPlayers().contains(target)));
+        message = message.replace("%status%", target.isOnline() ? this.getPlugin().getConfig().getString("status.online") : this.getPlugin().getConfig().getString("status.offline"));
+        message = message.replace("%banned%", this.getPlugin().getServer().getBannedPlayers().contains(target) ? "Yes" : "No");
+        message = message.replace("%muted%", essUser == null ? "Unknown" : (essUser.getMuted() ? "Yes" : "No"));
+        message = message.replace("%ip%", essUser == null ? "Unknown" : essUser.getLastLoginAddress());
         message = message.replace("%location%", this.getLocation(target));
-        message = message.replace("%player%", target.getName());
         message = message.replace("%first-join%", firstJoined);
         message = message.replace("%name-history%", nameHist);
         message = message.replace("%playtime%", playTime);
         message = message.replace("%group%", group);
         message = message.replace("%seen%", seen);
-        message = message.replace("%ip%", ip);
+
+        if (this.sendJsonUsername(sender, message, target.getName(), nameHist))
+            return null;
 
         return message;
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String d, String[] args) {
+    private boolean sendJsonUsername(CommandSender user, String message, String targetName, String nameHistory) {
+        String playerPlaceholder = "%player%";
 
-        List<String> offlinePlayers;
-        if (args.length == 0) {
-            offlinePlayers = new ArrayList<>();
-            for (OfflinePlayer offlinePlayer : this.plugin.getServer().getOfflinePlayers())
-                offlinePlayers.add(offlinePlayer.getName());
+        int placeholderIndex = message.indexOf(playerPlaceholder);
+        if (placeholderIndex <= -1) return false;
 
-            return offlinePlayers;
-        }
+        String firstHalf = message.replace(playerPlaceholder, "").substring(0, placeholderIndex);
+        String secondHalf = message.replace(playerPlaceholder, "").substring(placeholderIndex);
 
-        if (args.length == 1) {
-            offlinePlayers = new ArrayList<>();
-            for (OfflinePlayer offlinePlayer : this.plugin.getServer().getOfflinePlayers())
-                if (offlinePlayer.getName().toLowerCase().startsWith(args[0].toLowerCase()))
-                    offlinePlayers.add(offlinePlayer.getName());
+        TextComponent username = new TextComponent(this.getPlugin().getStringUtils().color(ChatColor.getLastColors(firstHalf) + targetName));
+        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(this.getPlugin().getStringUtils().color(nameHistory)).create());
+        username.setHoverEvent(hoverEvent);
 
-            return offlinePlayers;
-        }
-        return null;
+        TextComponent firstComponent = new TextComponent(this.getPlugin().getStringUtils().color(firstHalf));
+        TextComponent secondComponent = new TextComponent(this.getPlugin().getStringUtils().color(secondHalf));
+
+        TextComponent finalComponent = new TextComponent(firstComponent, username, secondComponent);
+        user.spigot().sendMessage(finalComponent);
+        return true;
     }
 
     private String getLocation(OfflinePlayer target) {
-        String location;
-        if (target.isOnline()) {
-            Player onlineTarget = target.getPlayer();
+        if (target.isOnline())
+            return this.formatLocation(target.getPlayer().getLocation());
 
-            int x = (int) Math.round(onlineTarget.getLocation().getX());
-            int y = (int) Math.round(onlineTarget.getLocation().getY());
-            int z = (int) Math.round(onlineTarget.getLocation().getZ());
-
-            location = this.plugin.getConfig().getString("formats.location");
-
-            location = location.replace("%world%", onlineTarget.getLocation().getWorld().getName());
-            location = location.replace("%x%", String.valueOf(x));
-            location = location.replace("%y%", String.valueOf(y));
-            location = location.replace("%z%", String.valueOf(z));
-
-            return location;
-        }
-
-        User essUser = this.plugin.getEssentials().getOfflineUser(target.getName());
-        if (essUser == null || essUser.getLogoutLocation() == null)
+        Location logoutLocation;
+        User essUser = this.getPlugin().getEssentials().getOfflineUser(target.getName());
+        if (essUser == null || (logoutLocation = essUser.getLogoutLocation()) == null)
             return "Unknown";
 
-        int x = (int) Math.round(essUser.getLogoutLocation().getX());
-        int y = (int) Math.round(essUser.getLogoutLocation().getY());
-        int z = (int) Math.round(essUser.getLogoutLocation().getZ());
+        return this.formatLocation(logoutLocation);
+    }
 
-        location = this.plugin.getConfig().getString("formats.location");
+    private String formatLocation(Location location) {
+        long x, y, z;
+        x = Math.round(location.getX());
+        y = Math.round(location.getY());
+        z = Math.round(location.getZ());
 
-        location = location.replace("%world%", essUser.getLogoutLocation().getWorld().getName());
-        location = location.replace("%x%", String.valueOf(x));
-        location = location.replace("%y%", String.valueOf(y));
-        location = location.replace("%z%", String.valueOf(z));
+        String locationFormat = this.getPlugin().getConfig().getString("formats.location");
 
-        return location;
+        locationFormat = locationFormat.replace("%world%", location.getWorld().getName());
+        locationFormat = locationFormat.replace("%x%", String.valueOf(x));
+        locationFormat = locationFormat.replace("%y%", String.valueOf(y));
+        locationFormat = locationFormat.replace("%z%", String.valueOf(z));
+
+        return locationFormat;
     }
 }

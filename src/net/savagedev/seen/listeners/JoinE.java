@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import java.util.UUID;
 
 public class JoinE implements Listener {
-    private Seen plugin;
+    private final Seen plugin;
 
     public JoinE(Seen plugin) {
         this.plugin = plugin;
