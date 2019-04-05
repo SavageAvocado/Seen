@@ -34,7 +34,7 @@ public class StringUtils {
         user.sendMessage(this.color(message));
     }
 
-    public String color(String message) {
+    private String color(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 }

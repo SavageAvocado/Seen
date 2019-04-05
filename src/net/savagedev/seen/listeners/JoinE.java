@@ -22,10 +22,10 @@ public class JoinE implements Listener {
         Player user = e.getPlayer();
         UUID uuid = user.getUniqueId();
 
-        long joinTime = System.currentTimeMillis();
-        this.plugin.setJoinTime(uuid, joinTime);
+        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, ()-> {
+            long joinTime = System.currentTimeMillis();
+            this.plugin.setJoinTime(uuid, joinTime);
 
-        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> {
             this.plugin.getMojangUtils().getNameHistory(user);
 
             FileConfiguration config = this.plugin.getFileUtils().getFileConfiguration(uuid.toString());

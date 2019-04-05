@@ -1,13 +1,9 @@
 package net.savagedev.seen.commands;
 
 import com.earth2me.essentials.User;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.savagedev.seen.Seen;
 import net.savagedev.seen.commands.async.AsyncCommand;
 import net.savagedev.seen.utils.DateUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
@@ -16,7 +12,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class SeenCmd extends AsyncCommand {
@@ -36,7 +34,7 @@ public class SeenCmd extends AsyncCommand {
             String nameHist = this.getPlugin().getMojangUtils().getNameHistory(onlineTarget);
             List<String> messages = user.hasPermission(this.getPlugin().getConfig().getString("admin-permission")) ? this.getPlugin().getConfig().getStringList("messages.admin-seen") : this.getPlugin().getConfig().getStringList("messages.seen");
             for (String seenMessage : messages)
-                this.getPlugin().getStringUtils().message(user, this.format(user, seenMessage, onlineTarget, nameHist, this.getPlugin().getJoinTime(onlineTarget.getUniqueId()), this.getPlugin().getDateUtils().formatPlayTime(onlineTarget.getStatistic(Statistic.PLAY_ONE_TICK), DateUtils.TimeLengthFormat.LONG), this.getPlugin().getPermission().getPrimaryGroup(onlineTarget)));
+                this.getPlugin().getStringUtils().message(user, this.format(seenMessage, onlineTarget, nameHist, this.getPlugin().getJoinTime(onlineTarget.getUniqueId()), this.getPlugin().getDateUtils().formatPlayTime(onlineTarget.getStatistic(Statistic.PLAY_ONE_TICK), DateUtils.TimeLengthFormat.LONG), this.getPlugin().getPermission().getPrimaryGroup(onlineTarget)));
             return;
         }
 
@@ -52,10 +50,10 @@ public class SeenCmd extends AsyncCommand {
 
         List<String> messages = user.hasPermission(this.getPlugin().getConfig().getString("admin-permission")) ? this.getPlugin().getConfig().getStringList("messages.admin-seen") : this.getPlugin().getConfig().getStringList("messages.seen");
         for (String seenMessage : messages)
-            this.getPlugin().getStringUtils().message(user, this.format(user, seenMessage, offlineTarget, nameHist, offlineTarget.getLastPlayed(), playTime, this.getPlugin().getPermission().getPrimaryGroup((user instanceof Player) ? ((Player) user).getLocation().getWorld().getName() : this.getPlugin().getServer().getWorlds().get(0).getName(), offlineTarget)));
+            this.getPlugin().getStringUtils().message(user, this.format(seenMessage, offlineTarget, nameHist, offlineTarget.getLastPlayed(), playTime, this.getPlugin().getPermission().getPrimaryGroup((user instanceof Player) ? ((Player) user).getLocation().getWorld().getName() : this.getPlugin().getServer().getWorlds().get(0).getName(), offlineTarget)));
     }
 
-    private String format(CommandSender sender, String message, OfflinePlayer target, String nameHist, long lastPlayed, String playTime, String group) {
+    private String format(String message, OfflinePlayer target, String nameHist, long lastPlayed, String playTime, String group) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(new Date(lastPlayed));
         String seen = this.getPlugin().getDateUtils().formatDateDiff(new GregorianCalendar(), calendar);
@@ -70,37 +68,14 @@ public class SeenCmd extends AsyncCommand {
         message = message.replace("%muted%", essUser == null ? "Unknown" : (essUser.getMuted() ? "Yes" : "No"));
         message = message.replace("%ip%", essUser == null ? "Unknown" : essUser.getLastLoginAddress());
         message = message.replace("%location%", this.getLocation(target));
+        message = message.replace("%player%", target.getName());
         message = message.replace("%first-join%", firstJoined);
         message = message.replace("%name-history%", nameHist);
         message = message.replace("%playtime%", playTime);
         message = message.replace("%group%", group);
         message = message.replace("%seen%", seen);
 
-        if (this.sendJsonUsername(sender, message, target.getName(), nameHist))
-            return null;
-
         return message;
-    }
-
-    private boolean sendJsonUsername(CommandSender user, String message, String targetName, String nameHistory) {
-        String playerPlaceholder = "%player%";
-
-        int placeholderIndex = message.indexOf(playerPlaceholder);
-        if (placeholderIndex <= -1) return false;
-
-        String firstHalf = message.replace(playerPlaceholder, "").substring(0, placeholderIndex);
-        String secondHalf = message.replace(playerPlaceholder, "").substring(placeholderIndex);
-
-        TextComponent username = new TextComponent(this.getPlugin().getStringUtils().color(ChatColor.getLastColors(firstHalf) + targetName));
-        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(this.getPlugin().getStringUtils().color(nameHistory)).create());
-        username.setHoverEvent(hoverEvent);
-
-        TextComponent firstComponent = new TextComponent(this.getPlugin().getStringUtils().color(firstHalf));
-        TextComponent secondComponent = new TextComponent(this.getPlugin().getStringUtils().color(secondHalf));
-
-        TextComponent finalComponent = new TextComponent(firstComponent, username, secondComponent);
-        user.spigot().sendMessage(finalComponent);
-        return true;
     }
 
     private String getLocation(OfflinePlayer target) {

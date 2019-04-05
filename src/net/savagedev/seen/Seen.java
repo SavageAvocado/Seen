@@ -1,24 +1,27 @@
 package net.savagedev.seen;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import net.savagedev.seen.commands.SeenReloadCmd;
+import com.earth2me.essentials.Essentials;
 import net.milkbowl.vault.permission.Permission;
 import net.savagedev.seen.commands.PlaytimeCmd;
-import net.savagedev.seen.utils.MojangUtils;
-import net.savagedev.seen.utils.StringUtils;
 import net.savagedev.seen.commands.SeenCmd;
-import com.earth2me.essentials.Essentials;
+import net.savagedev.seen.commands.SeenReloadCmd;
 import net.savagedev.seen.listeners.JoinE;
 import net.savagedev.seen.listeners.QuitE;
+import net.savagedev.seen.papi.PapiHook;
 import net.savagedev.seen.utils.DateUtils;
 import net.savagedev.seen.utils.FileUtils;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.entity.Player;
+import net.savagedev.seen.utils.MojangUtils;
+import net.savagedev.seen.utils.StringUtils;
 import org.bukkit.Statistic;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class Seen extends JavaPlugin {
     private Map<UUID, Long> joinTime;
@@ -34,6 +37,7 @@ public class Seen extends JavaPlugin {
         this.loadConfig();
         this.loadUtils();
         this.hookVault();
+        this.hookPapi();
         this.loadCommands();
         this.loadListeners();
         this.hookEssentials();
@@ -95,6 +99,12 @@ public class Seen extends JavaPlugin {
         pluginManager.registerEvents(new QuitE(this), this);
     }
 
+    private void hookPapi() {
+        if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new PapiHook(this, "avocado").hook();
+        }
+    }
+
     private void hookEssentials() {
         if (this.getServer().getPluginManager().getPlugin("Essentials") != null) {
             this.essentials = Essentials.getPlugin(Essentials.class);
@@ -109,6 +119,7 @@ public class Seen extends JavaPlugin {
         if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
             this.getServer().getLogger().severe(String.format("[%s] Vault not found! Disabling plugin.", this.getDescription().getName()));
             this.getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
         RegisteredServiceProvider<Permission> rsp = this.getServer().getServicesManager().getRegistration(Permission.class);
@@ -116,6 +127,7 @@ public class Seen extends JavaPlugin {
         if (rsp == null) {
             this.getServer().getLogger().severe(String.format("[%s] Registered service provider not found! Disabling plugin.", this.getDescription().getName()));
             this.getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
         if ((this.permission = rsp.getProvider()) == null) {
