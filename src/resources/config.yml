@@ -1,5 +1,3 @@
-preferred-accuracy: 2
-
 messages:
   invalid-arguments: '&cInvalid arguments! Try /seen <player>'
   player-not-found: '&cPlayer not found.'

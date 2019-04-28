@@ -12,9 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class SeenCmd extends AsyncCommand {
@@ -34,7 +32,7 @@ public class SeenCmd extends AsyncCommand {
             String nameHist = this.getPlugin().getMojangUtils().getNameHistory(onlineTarget);
             List<String> messages = user.hasPermission(this.getPlugin().getConfig().getString("admin-permission")) ? this.getPlugin().getConfig().getStringList("messages.admin-seen") : this.getPlugin().getConfig().getStringList("messages.seen");
             for (String seenMessage : messages)
-                this.getPlugin().getStringUtils().message(user, this.format(seenMessage, onlineTarget, nameHist, this.getPlugin().getJoinTime(onlineTarget.getUniqueId()), this.getPlugin().getDateUtils().formatPlayTime(onlineTarget.getStatistic(Statistic.PLAY_ONE_TICK), DateUtils.TimeLengthFormat.LONG), this.getPlugin().getPermission().getPrimaryGroup(onlineTarget)));
+                this.getPlugin().getStringUtils().message(user, this.format(seenMessage, onlineTarget, nameHist, this.getPlugin().getJoinTime(onlineTarget.getUniqueId()), null/*this.getPlugin().getDateUtils().formatPlayTime(onlineTarget.getStatistic(Statistic.PLAY_ONE_TICK), DateUtils.TimeLengthFormat.LONG)*/, this.getPlugin().getPermission().getPrimaryGroup(onlineTarget)));
             return;
         }
 
@@ -54,9 +52,7 @@ public class SeenCmd extends AsyncCommand {
     }
 
     private String format(String message, OfflinePlayer target, String nameHist, long lastPlayed, String playTime, String group) {
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(new Date(lastPlayed));
-        String seen = this.getPlugin().getDateUtils().formatDateDiff(new GregorianCalendar(), calendar);
+        String seen = this.getPlugin().getDateUtils().formatDateDiff(new Date(), new Date(lastPlayed), DateUtils.TimeLengthFormat.LONG);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(this.getPlugin().getConfig().getString("formats.first-join"));
         String firstJoined = simpleDateFormat.format(new Date(target.getFirstPlayed()));
@@ -71,7 +67,7 @@ public class SeenCmd extends AsyncCommand {
         message = message.replace("%player%", target.getName());
         message = message.replace("%first-join%", firstJoined);
         message = message.replace("%name-history%", nameHist);
-        message = message.replace("%playtime%", playTime);
+        //message = message.replace("%playtime%", playTime);
         message = message.replace("%group%", group);
         message = message.replace("%seen%", seen);
 

@@ -1,20 +1,9 @@
 package net.savagedev.seen.utils;
 
-import java.util.Calendar;
+import java.util.Date;
 
 public class DateUtils {
-    private int preferredAccuracy;
-
-    public DateUtils(int preferredAccuracy) {
-        this.preferredAccuracy = preferredAccuracy;
-    }
-
-    public void setPreferredAccuracy(int accuracy) {
-        this.preferredAccuracy = accuracy;
-    }
-
-    public String formatPlayTime(long playTime, TimeLengthFormat timeLengthFormat) {
-        String[] names = timeLengthFormat.getTimeFormat();
+    public String formatPlayTime(long playTime, TimeLengthFormat timeFormat) {
         long[] times = new long[6];
 
         times[0] = playTime / 20 % 60; // Seconds
@@ -24,57 +13,53 @@ public class DateUtils {
         times[4] = playTime / (20 * 86400 * 30) % 12; // Months
         times[5] = playTime / (20 * 86400 * 365); // Years
 
-        StringBuilder stringBuilder = new StringBuilder();
+        return this.formatTimes(times, timeFormat);
+    }
+
+    public String formatDateDiff(Date dateFrom, Date dateTo, TimeLengthFormat timeFormat) {
+        long from = dateFrom.getTime();
+        long to = dateTo.getTime();
+
+        if (from == to) {
+            return "now";
+        }
+
+        boolean future = dateTo.after(dateFrom);
+
+        long difference = future ? to - from : from - to;
+        long[] times = new long[6];
+
+        times[0] = difference / 1000 % 60; // Seconds
+        times[1] = difference / (1000 * 60) % 60; // Minutes
+        times[2] = difference / (1000 * 3600) % 24; // Hours
+        times[3] = difference / (1000 * 86400) % 30; // Days
+        times[4] = difference / (1000 * 86400 * 30L) % 12; // Months
+        times[5] = difference / (1000 * 86400 * 365L); // Years
+
+        return this.formatTimes(times, timeFormat);
+    }
+
+    private String formatTimes(long[] times, TimeLengthFormat format) {
+        StringBuilder builder = new StringBuilder();
+        String[] names = format.getTimeFormat();
 
         for (int i = times.length - 1; i >= 0; i--) {
             long time = times[i];
 
-            if (time <= 0)
+            if (time <= 0) {
                 continue;
+            }
 
             String name = names[i];
-            if (time > 1 && timeLengthFormat == TimeLengthFormat.LONG)
+
+            if (time > 1 && format == TimeLengthFormat.LONG) {
                 name = name + "s";
-
-            stringBuilder.append(" ").append(time).append(timeLengthFormat == TimeLengthFormat.LONG ? " " : "").append(name);
-        }
-
-        return stringBuilder.toString().trim();
-    }
-
-    public String formatDateDiff(Calendar dateFrom, Calendar dateTo) {
-        boolean future = false;
-        if (dateTo.equals(dateFrom))
-            return "now";
-
-        if (dateTo.after(dateFrom))
-            future = true;
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        int[] types = new int[]{1, 2, 5, 11, 12, 13};
-        String[] names = new String[]{"year", "years", "month", "months", "day", "days", "hour", "hours", "minute", "minutes", "second", "seconds"};
-        int accuracy = 0;
-
-        for (int i = 0; i < types.length && accuracy <= (this.preferredAccuracy > names.length ? names.length : this.preferredAccuracy); ++i) {
-            int diff = 0;
-
-            long savedDate;
-            for (savedDate = dateFrom.getTimeInMillis(); future && !dateFrom.after(dateTo) || !future && !dateFrom.before(dateTo); ++diff) {
-                savedDate = dateFrom.getTimeInMillis();
-                dateFrom.add(types[i], future ? 1 : -1);
             }
 
-            --diff;
-            dateFrom.setTimeInMillis(savedDate);
-
-            if (diff > 0) {
-                stringBuilder.append(" ").append(diff).append(" ").append(names[i * 2 + (diff > 1 ? 1 : 0)]);
-                ++accuracy;
-            }
+            builder.append(" ").append(time).append(format == TimeLengthFormat.LONG ? " " : "").append(name);
         }
 
-        return stringBuilder.length() == 0 ? "now" : stringBuilder.toString().trim();
+        return builder.toString().trim();
     }
 
     public enum TimeLengthFormat {

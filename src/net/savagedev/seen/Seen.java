@@ -59,16 +59,15 @@ public class Seen extends JavaPlugin {
 
     public void reload() {
         this.reloadConfig();
-        this.dateUtils.setPreferredAccuracy(this.getConfig().getInt("preferred-accuracy"));
     }
 
     private void loadUtils() {
         this.joinTime = new HashMap<>();
 
-        this.dateUtils = new DateUtils(this.getConfig().getInt("preferred-accuracy"));
         this.fileUtils = new FileUtils(this.getDataFolder());
         this.mojangUtils = new MojangUtils(this);
         this.stringUtils = new StringUtils();
+        this.dateUtils = new DateUtils();
 
         if (this.getServer().getOnlinePlayers().size() <= 0)
             return;

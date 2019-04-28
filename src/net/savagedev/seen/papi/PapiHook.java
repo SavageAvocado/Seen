@@ -55,8 +55,6 @@ public class PapiHook extends EZPlaceholderHook {
     }
 
     private String getLastSeen(OfflinePlayer user) {
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(new Date(user.isOnline() ? this.plugin.getJoinTime(user.getUniqueId()) : user.getLastPlayed()));
-        return this.plugin.getDateUtils().formatDateDiff(new GregorianCalendar(), calendar);
+        return this.plugin.getDateUtils().formatDateDiff(new Date(), new Date(user.isOnline() ? this.plugin.getJoinTime(user.getUniqueId()) : user.getLastPlayed()), DateUtils.TimeLengthFormat.LONG);
     }
 }
