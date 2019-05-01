@@ -28,21 +28,21 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://E:/Servers/SavageCraft/Lobby/spigot.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/PlaceholderAPI-2.9.2.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="jar://E:/Servers/SavageCraft/Lobby/spigot.jar!/" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/PlaceholderAPI-2.9.2.jar!/" />
+          <root url="jar://E:/Servers/1.14/spigot.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://E:/Servers/1.14/spigot.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>

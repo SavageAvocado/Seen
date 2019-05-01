@@ -23,7 +23,7 @@ public class PlaytimeCmd extends AsyncCommand {
             }
 
             for (String message : this.getPlugin().getConfig().getStringList("messages.playtime"))
-                this.getPlugin().getStringUtils().message(user, this.format((OfflinePlayer) user, message, String.valueOf(((Player) user).getStatistic(Statistic.LEAVE_GAME) + 1), this.getPlugin().getDateUtils().formatPlayTime(((Player) user).getStatistic(Statistic.PLAY_ONE_TICK), DateUtils.TimeLengthFormat.SHORT)));
+                this.getPlugin().getStringUtils().message(user, this.format((OfflinePlayer) user, message, String.valueOf(((Player) user).getStatistic(Statistic.LEAVE_GAME) + 1), this.getPlugin().getDateUtils().formatPlayTime(((Player) user).getStatistic(Statistic.PLAY_ONE_MINUTE), DateUtils.TimeLengthFormat.SHORT)));
             return;
         }
 
@@ -31,7 +31,7 @@ public class PlaytimeCmd extends AsyncCommand {
             Player target = this.getPlugin().getServer().getPlayer(args[0]);
 
             for (String message : this.getPlugin().getConfig().getStringList("messages.playtime"))
-                this.getPlugin().getStringUtils().message(user, this.format(target, message, String.valueOf(target.getStatistic(Statistic.LEAVE_GAME) + 1), this.getPlugin().getDateUtils().formatPlayTime(target.getStatistic(Statistic.PLAY_ONE_TICK), DateUtils.TimeLengthFormat.SHORT)));
+                this.getPlugin().getStringUtils().message(user, this.format(target, message, String.valueOf(target.getStatistic(Statistic.LEAVE_GAME) + 1), this.getPlugin().getDateUtils().formatPlayTime(target.getStatistic(Statistic.PLAY_ONE_MINUTE), DateUtils.TimeLengthFormat.SHORT)));
             return;
         }
 

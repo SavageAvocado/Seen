@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="Seen:jar">
-    <output-path>E:/Servers/Revelation 1.13.2/Lobby/plugins</output-path>
+    <output-path>$PROJECT_DIR$/../../.Compiled Output</output-path>
     <root id="archive" name="Seen.jar">
       <element id="module-output" name="Seen" />
       <element id="file-copy" path="$PROJECT_DIR$/src/resources/config.yml" />

@@ -30,7 +30,7 @@ public class JoinE implements Listener {
 
             FileConfiguration config = this.plugin.getFileUtils().getFileConfiguration(uuid.toString());
             config.set("times-joined", user.getStatistic(Statistic.LEAVE_GAME) + 1);
-            config.set("playtime", user.getStatistic(Statistic.PLAY_ONE_TICK));
+            config.set("playtime", user.getStatistic(Statistic.PLAY_ONE_MINUTE));
             config.set("join-time", joinTime);
             this.plugin.getFileUtils().saveFileConfiguration(config, uuid.toString());
         });

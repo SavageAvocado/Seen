@@ -25,7 +25,7 @@ public class QuitE implements Listener {
             this.plugin.removeJoinTime(uuid);
 
             FileConfiguration config = this.plugin.getFileUtils().getFileConfiguration(uuid.toString());
-            config.set("playtime", user.getStatistic(Statistic.PLAY_ONE_TICK));
+            config.set("playtime", user.getStatistic(Statistic.PLAY_ONE_MINUTE));
             this.plugin.getFileUtils().saveFileConfiguration(config, uuid.toString());
         });
     }

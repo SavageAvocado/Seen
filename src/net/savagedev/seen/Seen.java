@@ -52,7 +52,7 @@ public class Seen extends JavaPlugin {
 
         for (Player user : this.getServer().getOnlinePlayers()) {
             FileConfiguration config = this.getFileUtils().getFileConfiguration(user.getUniqueId().toString());
-            config.set("playtime", user.getStatistic(Statistic.PLAY_ONE_TICK));
+            config.set("playtime", user.getStatistic(Statistic.PLAY_ONE_MINUTE));
             this.getFileUtils().saveFileConfiguration(config, user.getUniqueId().toString());
         }
     }
