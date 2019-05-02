@@ -3,7 +3,7 @@ package net.savagedev.seen.utils;
 import java.util.Date;
 
 public class DateUtils {
-    public String formatPlayTime(long playTime, TimeLengthFormat timeFormat) {
+    public static String formatTime(long playTime, TimeLengthFormat timeFormat) {
         long[] times = new long[6];
 
         times[0] = playTime / 20 % 60; // Seconds
@@ -13,10 +13,10 @@ public class DateUtils {
         times[4] = playTime / (20 * 86400 * 30) % 12; // Months
         times[5] = playTime / (20 * 86400 * 365); // Years
 
-        return this.formatTimes(times, timeFormat);
+        return formatTimes(times, timeFormat);
     }
 
-    public String formatDateDiff(Date dateFrom, Date dateTo, TimeLengthFormat timeFormat) {
+    public static String formatTimeDifference(Date dateFrom, Date dateTo, TimeLengthFormat timeFormat) {
         long from = dateFrom.getTime();
         long to = dateTo.getTime();
 
@@ -36,10 +36,10 @@ public class DateUtils {
         times[4] = difference / (1000 * 86400 * 30L) % 12; // Months
         times[5] = difference / (1000 * 86400 * 365L); // Years
 
-        return this.formatTimes(times, timeFormat);
+        return formatTimes(times, timeFormat);
     }
 
-    private String formatTimes(long[] times, TimeLengthFormat format) {
+    private static String formatTimes(long[] times, TimeLengthFormat format) {
         StringBuilder builder = new StringBuilder();
         String[] names = format.getTimeFormat();
 

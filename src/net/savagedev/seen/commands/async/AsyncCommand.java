@@ -5,22 +5,20 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import javax.annotation.Nonnull;
+
 public abstract class AsyncCommand implements CommandExecutor {
-    private final Seen plugin;
+    public final Seen plugin;
 
     public AsyncCommand(Seen plugin) {
         this.plugin = plugin;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String d, String[] args) {
+    public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command cmd, @Nonnull String d, @Nonnull String[] args) {
         this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () -> this.execute(sender, args));
         return true;
     }
 
     public abstract void execute(CommandSender sender, String... args);
-
-    protected Seen getPlugin() {
-        return this.plugin;
-    }
 }

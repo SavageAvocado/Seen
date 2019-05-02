@@ -1,46 +1,58 @@
+# -=-=-=-=-=-=-=-=[ Seen! ]=-=-=-=-=-=-=-=-=- #
+#   Author: SavageAvocado     Date: 3/05/19   #
+#     Description: A better /seen plugin.     #
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
+
+options:
+  playtime-time-format: Short # Ex. 'h' = hours; 'm' = minutes; 's' = seconds; etc...
+  seen-time-format: Long # Ex. "hours" = hours; "minutes" = minutes; "seconds" = seconds; etc...
+
 messages:
-  invalid-arguments: '&cInvalid arguments! Try /seen <player>'
-  player-not-found: '&cPlayer not found.'
-  seen:
-  - '&8&m-----------------------------------------------------'
-  - '&9Player %player% is %status%&9 since %seen%'
-  - ''
-  - '&3First Join:&7 %first-join%'
-  - '&3Playtime:&7 %playtime%'
-  - '&3Banned:&7 %banned%'
-  - '&3Muted:&7 %muted%'
-  - ''
-  - '&3Name History:&7 %name-history%'
-  - ''
-  - '&3Location:&7 %location%'
-  - '&8&m-----------------------------------------------------'
-  admin-seen:
-  - '&8&m-----------------------------------------------------'
-  - '&9Player %player% is %status%&9 since %seen%'
-  - ''
-  - '&3Rank:&7 %group%'
-  - '&3First Join:&7 %first-join%'
-  - '&3Playtime:&7 %playtime%'
-  - '&3Location:&7 %location%'
-  - '&3Banned:&7 %banned%'
-  - '&3Muted:&7 %muted%'
-  - ''
-  - '&3Name History:&7 %name-history%'
-  - ''
-  - '&3IP: &7%ip%'
-  - '&8&m-----------------------------------------------------'
-  playtime:
-  - '&9%player%''s stats'
-  - '&3Play Time:&7 %playtime%'
-  - '&3Times Joined:&7 %times-joined%'
+  error: # These are all pretty self-explanatory.
+    no-permission: "&cYou do not have permission to execute this command."
+    invalid-arguments: "&cInvalid arguments! Try: /seen <player>"
+    player-not-found: "&cPlayer not found."
+  seen: # You can have as many seen messages as you want.
+    default: # The seen message that normal players will see. (No permission required.)
+      - "&8&m-------------------------------------------"
+      - "&b%player% &3has been %status% &3for %seen%"
+      - ""
+      - "&bJoin date&8: &3%join-date%"
+      - "&bPlaytime&8: &3%playtime%"
+      - ""
+      - "&bName history&8: &3%name-history%"
+      - "&8&m-------------------------------------------"
+    admin: # The seen message that players with the permission "seen.admin" will see.
+      - "&8&m-------------------------------------------"
+      - "&b%player% &3has been %status% &3for %seen%"
+      - ""
+      - "&bJoin date&8: &3%join-date%"
+      - "&bPlaytime&8: &3%playtime%"
+      - ""
+      - "&bName history&8: &3%name-history%"
+      - ""
+      - "&bIP&8: &3%ip%"
+      - "&8&m-------------------------------------------"
+  playtime: # The playtime message.
+    - '&9%player%''s stats:'
+    - '&3Play Time:&7 %playtime%'
+    - '&3Times Joined:&7 %times-joined%'
 
-admin-permission: 'seen.admin'
+permissions:
+  reload: "seen.reload" # The permission required to reload the plugin.
 
-status:
-  offline: '&cOffline'
-  online: '&aOnline'
+placeholders:
+  status: # What the placeholder %status% will be replaced with.
+    true: "&aonline" # If true, it will be replaced with this.
+    false: "&coffline" # If false, it will be replaced with this.
+  banned: # Same as status...
+    true: "&cYes"
+    false: "&aNo"
+  muted: # See "banned" above.
+    true: "&cYes"
+    false: "&aNo"
 
-formats:
-  location: '(%world%, %x%, %y%, %z%)'
-  first-join: 'MM/dd/yy h:mm a'
-  name-hist-separator: ' > '
+formats: # Formate for dates, locations, and list separators.
+  location: '(%world%; %x%, %y%, %z%)'
+  dates: 'MM/dd/yy h:mm a'
+  separator: ' > '

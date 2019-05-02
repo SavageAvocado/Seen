@@ -3,13 +3,13 @@ package net.savagedev.seen.papi;
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 import net.savagedev.seen.Seen;
 import net.savagedev.seen.utils.DateUtils;
+import net.savagedev.seen.utils.io.FileUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.Calendar;
+import java.io.File;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class PapiHook extends EZPlaceholderHook {
     private final Seen plugin;
@@ -35,8 +35,9 @@ public class PapiHook extends EZPlaceholderHook {
         String offlineUsername = splitPlaceholder.length > 1 ? splitPlaceholder[1] : "";
         OfflinePlayer offlinePlayer = this.plugin.getServer().getOfflinePlayer(offlineUsername);
 
-        if (offlinePlayer == null)
+        if (offlinePlayer == null) {
             return "Unknown";
+        }
 
         if (placeholder.toLowerCase().startsWith("playtime_")) {
             return this.getPlayTime(offlinePlayer);
@@ -50,11 +51,11 @@ public class PapiHook extends EZPlaceholderHook {
     }
 
     private String getPlayTime(OfflinePlayer user) {
-        FileConfiguration config = this.plugin.getFileUtils().getFileConfiguration(user.getUniqueId().toString());
-        return config.getConfigurationSection("").contains("playtime") ? this.plugin.getDateUtils().formatPlayTime(config.getLong("playtime"), DateUtils.TimeLengthFormat.LONG) : "Unknown";
+        FileConfiguration config = FileUtils.load(new File(this.plugin.getDataFolder(), String.format("%s.yml", user.getUniqueId().toString())));
+        return config.getConfigurationSection("").contains("playtime") ? DateUtils.formatTime(config.getLong("playtime"), DateUtils.TimeLengthFormat.LONG) : "Unknown";
     }
 
     private String getLastSeen(OfflinePlayer user) {
-        return this.plugin.getDateUtils().formatDateDiff(new Date(), new Date(user.isOnline() ? this.plugin.getJoinTime(user.getUniqueId()) : user.getLastPlayed()), DateUtils.TimeLengthFormat.LONG);
+        return DateUtils.formatTimeDifference(new Date(), new Date(user.isOnline() ? this.plugin.getStatsManager().getLastOnline(user.getUniqueId()) : user.getLastPlayed()), DateUtils.TimeLengthFormat.LONG);
     }
 }

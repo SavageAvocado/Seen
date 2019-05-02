@@ -8,10 +8,9 @@ import net.savagedev.seen.commands.SeenReloadCmd;
 import net.savagedev.seen.listeners.JoinE;
 import net.savagedev.seen.listeners.QuitE;
 import net.savagedev.seen.papi.PapiHook;
-import net.savagedev.seen.utils.DateUtils;
-import net.savagedev.seen.utils.FileUtils;
-import net.savagedev.seen.utils.MojangUtils;
-import net.savagedev.seen.utils.StringUtils;
+import net.savagedev.seen.stats.StatsManager;
+import net.savagedev.seen.utils.io.FileUtils;
+import net.savagedev.seen.utils.io.MojangUtils;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -19,18 +18,13 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.io.File;
 
 public class Seen extends JavaPlugin {
-    private Map<UUID, Long> joinTime;
-    private StringUtils stringUtils;
+    private StatsManager statsManager;
     private MojangUtils mojangUtils;
     private Permission permission;
     private Essentials essentials;
-    private FileUtils fileUtils;
-    private DateUtils dateUtils;
 
     @Override
     public void onEnable() {
@@ -45,15 +39,15 @@ public class Seen extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.joinTime.clear();
-
-        if (this.getServer().getOnlinePlayers().size() <= 0)
+        if (this.getServer().getOnlinePlayers().isEmpty()) {
             return;
+        }
 
         for (Player user : this.getServer().getOnlinePlayers()) {
-            FileConfiguration config = this.getFileUtils().getFileConfiguration(user.getUniqueId().toString());
+            File file = new File(this.getDataFolder(), String.format("storage/%s.yml", user.getUniqueId().toString()));
+            FileConfiguration config = FileUtils.load(file);
             config.set("playtime", user.getStatistic(Statistic.PLAY_ONE_MINUTE));
-            this.getFileUtils().saveFileConfiguration(config, user.getUniqueId().toString());
+            FileUtils.save(config, file);
         }
     }
 
@@ -62,30 +56,8 @@ public class Seen extends JavaPlugin {
     }
 
     private void loadUtils() {
-        this.joinTime = new HashMap<>();
-
-        this.fileUtils = new FileUtils(this.getDataFolder());
+        this.statsManager = new StatsManager(this);
         this.mojangUtils = new MojangUtils(this);
-        this.stringUtils = new StringUtils();
-        this.dateUtils = new DateUtils();
-
-        if (this.getServer().getOnlinePlayers().size() <= 0)
-            return;
-
-        for (Player user : this.getServer().getOnlinePlayers()) {
-            UUID uuid = user.getUniqueId();
-
-            FileConfiguration config;
-            if ((config = this.fileUtils.getFileConfiguration(uuid.toString())) == null) {
-                this.fileUtils.createFile(uuid.toString());
-
-                config = this.fileUtils.getFileConfiguration(uuid.toString());
-                config.set("join-time", System.currentTimeMillis());
-                this.fileUtils.saveFileConfiguration(config, uuid.toString());
-            }
-
-            this.setJoinTime(uuid, config.getLong("join-time"));
-        }
     }
 
     private void loadConfig() {
@@ -141,27 +113,12 @@ public class Seen extends JavaPlugin {
         this.getCommand("seen").setExecutor(new SeenCmd(this));
     }
 
-    public void setJoinTime(UUID uuid, long time) {
-        if (this.joinTime.containsKey(uuid))
-            this.removeJoinTime(uuid);
-
-        this.joinTime.put(uuid, time);
-    }
-
-    public void removeJoinTime(UUID uuid) {
-        this.joinTime.remove(uuid);
-    }
-
-    public long getJoinTime(UUID uuid) {
-        return this.joinTime.get(uuid);
+    public StatsManager getStatsManager() {
+        return this.statsManager;
     }
 
     public MojangUtils getMojangUtils() {
         return this.mojangUtils;
-    }
-
-    public StringUtils getStringUtils() {
-        return this.stringUtils;
     }
 
     public Permission getPermission() {
@@ -170,13 +127,5 @@ public class Seen extends JavaPlugin {
 
     public Essentials getEssentials() {
         return this.essentials;
-    }
-
-    public FileUtils getFileUtils() {
-        return this.fileUtils;
-    }
-
-    public DateUtils getDateUtils() {
-        return this.dateUtils;
     }
 }
