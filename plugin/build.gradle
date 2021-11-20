@@ -1,0 +1,36 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
+}
+
+group 'net.savagedev'
+version '1.6.0-SNAPSHOT'
+
+repositories {
+    // PAPI repo.
+    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+
+    // Vault repo.
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.10.10'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+
+    implementation project(':common')
+    implementation project(':legacy')
+    implementation project(':modern')
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from(sourceSets.main.resources.srcDirs) {
+        expand 'version': project.version
+        include 'plugin.yml'
+    }
+}
+
+shadowJar {
+    archiveFileName = "${rootProject.name}-${project.version}.jar"
+}

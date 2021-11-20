@@ -1,0 +1,26 @@
+name: Seen
+description: A better /seen plugin.
+
+author: SavageAvocado.
+website: savagedev.net
+
+version: ${version}
+main: net.savagedev.seen.SeenPlugin
+api-version: 1.13
+
+softdepend: [ PlaceholderAPI ]
+depend: [ Essentials, Vault ]
+
+commands:
+  seen:
+    description: Check when a player was last net.savagedev.seen online.
+  playtime:
+    description: Check how much time a player has in on the server.
+  seenreload:
+    description: Reload the configuration.
+    permission: seen.reload
+    aliases: [ seenrl ]
+
+permissions:
+  seen.reload:
+    default: op

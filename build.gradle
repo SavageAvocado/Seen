@@ -1,0 +1,11 @@
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+
+        // Spigot repo.
+        maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots' }
+    }
+}
