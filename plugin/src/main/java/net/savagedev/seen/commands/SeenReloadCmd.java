@@ -12,11 +12,6 @@ public class SeenReloadCmd extends AsyncCommand {
 
     @Override
     public void execute(CommandSender sender, String... args) {
-        if (!sender.hasPermission(this.seen.getConfig().getString("permissions.reload"))) {
-            MessageUtils.message(sender, "&cYou do not have permission to execute this command.");
-            return;
-        }
-
         this.seen.reloadConfig();
         MessageUtils.message(sender, "&9Plugin reloaded.");
     }

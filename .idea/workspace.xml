@@ -9,10 +9,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d86bb02-9fab-4458-8bf2-7bea8ece00ad" name="Default Changelist" comment="Added compatibility for 1.13+ &amp; rewrote storage.">
+    <list default="true" id="4d86bb02-9fab-4458-8bf2-7bea8ece00ad" name="Default Changelist" comment="Implemented a cache in MojangApi.java.">
+      <change beforePath="$PROJECT_DIR$/.gradle/7.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/net/savagedev/seen/papi/PapiHook.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/net/savagedev/seen/papi/PapiHook.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/net/savagedev/seen/utils/io/MojangApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/net/savagedev/seen/utils/io/MojangApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/net/savagedev/seen/commands/SeenReloadCmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/net/savagedev/seen/commands/SeenReloadCmd.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -297,7 +301,7 @@
       <recent name="net.savagedev.seen.utils.io" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.Seen:plugin [shadowJar]">
+  <component name="RunManager" selected="Gradle.Seen:plugin [clean]">
     <configuration name="Seen:common [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -405,8 +409,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.Seen:plugin [shadowJar]" />
         <item itemvalue="Gradle.Seen:plugin [clean]" />
+        <item itemvalue="Gradle.Seen:plugin [shadowJar]" />
         <item itemvalue="Gradle.Seen:modern [clean]" />
         <item itemvalue="Gradle.Seen:legacy [clean]" />
         <item itemvalue="Gradle.Seen:common [clean]" />
@@ -476,7 +480,7 @@
       <workItem from="1626830439567" duration="659000" />
       <workItem from="1626843029081" duration="107000" />
       <workItem from="1637330134622" duration="19493000" />
-      <workItem from="1637431685597" duration="3341000" />
+      <workItem from="1637431685597" duration="3863000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <created>1547079629494</created>
@@ -541,7 +545,14 @@
       <option name="project" value="LOCAL" />
       <updated>1637433626935</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Implemented a cache in MojangApi.java.">
+      <created>1637435453597</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1637435453597</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -639,7 +650,8 @@
     <MESSAGE value="Added development branch." />
     <MESSAGE value="Started rewrite." />
     <MESSAGE value="Added compatibility for 1.13+ &amp; rewrote storage." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added compatibility for 1.13+ &amp; rewrote storage." />
+    <MESSAGE value="Implemented a cache in MojangApi.java." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented a cache in MojangApi.java." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
