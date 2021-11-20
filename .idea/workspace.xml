@@ -9,14 +9,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d86bb02-9fab-4458-8bf2-7bea8ece00ad" name="Default Changelist" comment="Implemented a cache in MojangApi.java.">
+    <list default="true" id="4d86bb02-9fab-4458-8bf2-7bea8ece00ad" name="Default Changelist" comment="Added the correct permission to &quot;/seenreload&quot; command.">
       <change beforePath="$PROJECT_DIR$/.gradle/7.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin/src/main/java/net/savagedev/seen/commands/SeenReloadCmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/src/main/java/net/savagedev/seen/commands/SeenReloadCmd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/legacy/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/legacy/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modern/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/modern/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugin/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/plugin/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -480,7 +483,7 @@
       <workItem from="1626830439567" duration="659000" />
       <workItem from="1626843029081" duration="107000" />
       <workItem from="1637330134622" duration="19493000" />
-      <workItem from="1637431685597" duration="3863000" />
+      <workItem from="1637431685597" duration="4158000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <created>1547079629494</created>
@@ -552,7 +555,14 @@
       <option name="project" value="LOCAL" />
       <updated>1637435453597</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Added the correct permission to &quot;/seenreload&quot; command.">
+      <created>1637435879373</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1637435879373</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -651,7 +661,8 @@
     <MESSAGE value="Started rewrite." />
     <MESSAGE value="Added compatibility for 1.13+ &amp; rewrote storage." />
     <MESSAGE value="Implemented a cache in MojangApi.java." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented a cache in MojangApi.java." />
+    <MESSAGE value="Added the correct permission to &quot;/seenreload&quot; command." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added the correct permission to &quot;/seenreload&quot; command." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
