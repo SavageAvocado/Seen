@@ -9,7 +9,7 @@ main: net.savagedev.seen.SeenPlugin
 api-version: 1.13
 
 softdepend: [ PlaceholderAPI ]
-depend: [ Essentials, Vault ]
+depend: [ Vault ]
 
 commands:
   seen:
